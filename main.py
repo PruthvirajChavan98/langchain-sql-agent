@@ -4,15 +4,17 @@ matplotlib.use('Agg')  # Use 'Agg' backend to avoid plot window opening
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, text
-import pandas as pd
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import create_sql_agent
-from langchain_openai import AzureChatOpenAI
-from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
 import uuid
 import io
 import base64
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -22,26 +24,16 @@ class QueryRequest(BaseModel):
     query: str
 
 # LLM Configuration
-llm = AzureChatOpenAI(
-    api_key="ddf",
-    api_version="2025-01-01-preview",
-    azure_deployment="GPT4",
-    azure_endpoint="https://hfcl-genai-apim-cin-001-prod.azure-api.net"
+llm = ChatOpenAI(
+    model="gpt-4o"
 )
-
-deeoseek_llm = ChatDeepSeek(
-    model="deepseek-chat", 
-    temperature=0, 
-    api_key="sk-2c1ea644a7b644b891a793a0f8ab9c1a", 
-    api_base='https://api.deepseek.com'
-    )
 
 # Define your desired data structure using Pydantic
 class CoderPlot(BaseModel):
     appropriate_plot_name: str = Field(description="from given data given the name of appropriate plot (graph)")
     python_code_to_plot: str = Field(description="python (seaborn) code to plot the plot and save the plot as temp_plot.png")
 
-structured_llm = deeoseek_llm.with_structured_output(CoderPlot)
+structured_llm = llm.with_structured_output(CoderPlot)
 
 
 # Store ongoing tasks (for illustration purposes, could be persisted)
