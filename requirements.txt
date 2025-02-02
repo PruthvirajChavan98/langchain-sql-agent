@@ -1,13 +1,7 @@
-langgraph
 langchain-openai
 langchain_community
-langchain-deepseek-official
-langchain-experimental
 psycopg2-binary
 seaborn
-colorlog
-colorama
 fastapi
 uvicorn
 streamlit
-ipykernel
