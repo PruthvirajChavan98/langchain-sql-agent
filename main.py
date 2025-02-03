@@ -30,8 +30,8 @@ llm = ChatOpenAI(
 
 # Define your desired data structure using Pydantic
 class CoderPlot(BaseModel):
-    appropriate_plot_name: str = Field(description="from given data given the name of appropriate plot (graph)")
-    python_code_to_plot: str = Field(description="python (seaborn) code to plot the plot and save the plot as temp_plot.png")
+    appropriate_plot_type: str = Field(description="Determine the suitable plot type (graph) based on the given data.")
+    python_code_to_plot: str = Field(description="Python code using Seaborn to generate the plot, MAKE SURE TO RETURN CODE ONLY.")
 
 structured_llm = llm.with_structured_output(CoderPlot)
 
